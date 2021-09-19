@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 
-const LoginScreen = ({navigation}) => {
+const RegisterScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
           <View style={styles.header}>
@@ -42,17 +42,17 @@ const LoginScreen = ({navigation}) => {
             <TouchableOpacity onPress={()=> {}} style={styles.appButtonContainer}>
                     <Text style={styles.appButtonText}>Register</Text>
             </TouchableOpacity>
-            <View style={styles.containerLogin}>
+            <TouchableOpacity style={styles.containerLogin} onPress={() => {navigation.navigate("LoginScreen")}}>
                 <Text style={{fontSize: 17, fontWeight: 'bold'}}>Alread have an account ? </Text>
                 <Text style={{color: '#FF7070', fontSize: 17, fontWeight: 'bold'}}>Sign In</Text>
-            </View>
+            </TouchableOpacity>
           </View>
 
         </View>
       );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
     container: {
