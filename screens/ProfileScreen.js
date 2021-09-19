@@ -1,19 +1,15 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from 'react-native';
 
-const SplashScreen = ({navigation}) => {
+const ProfileScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
-          <Text>Splash Screen</Text>
-          <Button
-            title="Get Start"
-            onPress={()=> navigation.navigate("MainTabScreen")}
-          />
+          <Text>Profile Screen</Text>
         </View>
       );
 };
 
-export default SplashScreen;
+export default ProfileScreen;
 
 const styles = StyleSheet.create({
     container: {
