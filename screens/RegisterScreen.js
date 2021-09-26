@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
     },
          
     TextInputStyle:{
-        textAlign: 'start',
         height: 50,
         paddingStart: 10,
         borderWidth: 2,
