@@ -8,12 +8,12 @@ import Firebase from '../config/firebase';
 
 const auth = Firebase.auth();
 
-export default function LoginScreen({ navigation }) {
+export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');
-  const [loginError, setLoginError] = useState('');
+  const [signupError, setSignupError] = useState('');
 
   const handlePasswordVisibility = () => {
     if (rightIcon === 'eye') {
@@ -25,20 +25,20 @@ export default function LoginScreen({ navigation }) {
     }
   };
 
-  const onLogin = async () => {
+  const onHandleSignup = async () => {
     try {
       if (email !== '' && password !== '') {
-        await auth.signInWithEmailAndPassword(email, password);
+        await auth.createUserWithEmailAndPassword(email, password);
       }
     } catch (error) {
-      setLoginError(error.message);
+      setSignupError(error.message);
     }
   };
 
   return (
     <View style={styles.container}>
       <StatusBar style='dark-content' />
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Create new account</Text>
       <InputField
         inputStyle={{
           fontSize: 14
@@ -75,11 +75,11 @@ export default function LoginScreen({ navigation }) {
         onChangeText={text => setPassword(text)}
         handlePasswordVisibility={handlePasswordVisibility}
       />
-      {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
+      {signupError ? <ErrorMessage error={signupError} visible={true} /> : null}
       <Button
-        onPress={onLogin}
+        onPress={onHandleSignup}
         backgroundColor='#f57c00'
-        title='Login'
+        title='Signup'
         tileColor='#fff'
         titleSize={20}
         containerStyle={{
@@ -87,8 +87,8 @@ export default function LoginScreen({ navigation }) {
         }}
       />
       <RNButton
-        onPress={() => navigation.navigate('Signup')}
-        title='Go to Signup'
+        onPress={() => navigation.navigate('Login')}
+        title='Go to Login'
         color='#fff'
       />
     </View>
