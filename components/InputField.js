@@ -48,16 +48,18 @@ const styles = StyleSheet.create({
     padding: 12
   },
   leftIcon: {
-    marginRight: 10
+    marginRight: 10,
+    marginTop: 4
   },
   input: {
     flex: 1,
     width: '100%',
-    fontSize: 18
+    fontSize: 18,
   },
   rightIcon: {
     alignSelf: 'center',
-    marginLeft: 10
+    marginLeft: 10,
+    marginTop: 4
   }
 });
 
