@@ -8,12 +8,12 @@ import Firebase from '../config/firebase';
 
 const auth = Firebase.auth();
 
-export default function LoginScreen({ navigation }) {
+export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');
-  const [loginError, setLoginError] = useState('');
+  const [signupError, setSignupError] = useState('');
 
   const handlePasswordVisibility = () => {
     if (rightIcon === 'eye') {
@@ -25,13 +25,13 @@ export default function LoginScreen({ navigation }) {
     }
   };
 
-  const onLogin = async () => {
+  const onHandleSignup = async () => {
     try {
       if (email !== '' && password !== '') {
-        await auth.signInWithEmailAndPassword(email, password);
+        await auth.createUserWithEmailAndPassword(email, password);
       }
     } catch (error) {
-      setLoginError(error.message);
+      setSignupError(error.message);
     }
   };
 
@@ -39,9 +39,9 @@ export default function LoginScreen({ navigation }) {
     <View style={styles.container}>
       <StatusBar style='dark-content' />
       <View style={styles.header}>
-            <Text style={styles.headerTitle}>Sign In</Text>
-            <Text style={styles.headerSubTitle}>Welcome Back and Glad to see you !</Text>
-          </View>
+        <Text style={styles.headerTitle}>Sign Up</Text>
+        <Text style={styles.headerSubTitle}>Create an new account to access all feature</Text>
+      </View>
       <InputField
         inputStyle={{
           fontSize: 14
@@ -49,7 +49,7 @@ export default function LoginScreen({ navigation }) {
         containerStyle={{
           backgroundColor: '#fff',
           marginBottom: 20,
-          borderRadius: 20 ,
+          borderRadius: 20,
         }}
         leftIcon='email'
         placeholder='Enter email'
@@ -62,12 +62,12 @@ export default function LoginScreen({ navigation }) {
       />
       <InputField
         inputStyle={{
-          fontSize: 14,
+          fontSize: 14
         }}
         containerStyle={{
           backgroundColor: '#fff',
           marginBottom: 20,
-          borderRadius: 20 ,
+          borderRadius: 20,
         }}
         leftIcon='lock'
         placeholder='Enter password'
@@ -80,21 +80,21 @@ export default function LoginScreen({ navigation }) {
         onChangeText={text => setPassword(text)}
         handlePasswordVisibility={handlePasswordVisibility}
       />
-      {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
+      {signupError ? <ErrorMessage error={signupError} visible={true} /> : null}
       <View style={styles.submitContainer}>
         <Button
-          onPress={onLogin}
+          onPress={onHandleSignup}
           backgroundColor='#FF7070'
-          title='Login'
+          title='Signup'
           tileColor='#fff'
           titleSize={20}
           containerStyle={{
-            marginBottom: 10
+            marginBottom: 10,
           }}
         />
-        <View style={styles.containerLogin}>
-          <Text style={{fontSize: 17, fontWeight: 'bold'}}>Don't have an account ? </Text>
-          <Text style={{color: '#FF7070', fontSize: 17, fontWeight: 'bold'}} onPress={() => navigation.navigate('Signup')}>Sign Up</Text>
+        <View style={styles.containerLogin} >
+          <Text style={{fontSize: 17, fontWeight: 'bold'}}>Alread have an account ? </Text>
+          <Text style={{color: '#FF7070', fontSize: 17, fontWeight: 'bold'}} onPress={() => {navigation.navigate("Login")}}>Sign In</Text>
         </View>
       </View>
     </View>
@@ -105,13 +105,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#eee',
-    alignItems: 'center',  
-    padding: 10
+    paddingTop: 50,
+    paddingHorizontal: 12
   },
+
   header: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 100,
+    marginTop: 50,
+    marginBottom: 50
 },
 headerTitle: {
     fontSize: 28,
@@ -136,15 +138,10 @@ submitContainer: {
   alignItems: 'center',
   marginHorizontal: 10
 },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#fff',
-    alignSelf: 'center',
-    paddingBottom: 24
-  },
-  containerLogin: {
-    flexDirection: 'row',
-    opacity: 0.7
+containerLogin: {
+  flexDirection: 'row',
+  opacity: 0.7,
+  justifyContent: 'center'
 }
+
 });
