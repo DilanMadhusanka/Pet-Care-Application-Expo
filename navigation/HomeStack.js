@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 export default function HomeStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name='Home' component={MainTabScreen} options={{ headerShown: false }}  />
+      <Stack.Screen name='MainTabScreen' component={MainTabScreen} options={{ headerShown: false }}  />
     </Stack.Navigator>
   );
 }
