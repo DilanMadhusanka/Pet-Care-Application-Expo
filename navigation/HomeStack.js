@@ -1,14 +1,15 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import HomeScreen from '../screens/HomeScreen';
+// import HomeScreen from '../screens/HomeScreen';
+import MainTabScreen from '../screens/MainTabScreen';
 
 const Stack = createStackNavigator();
 
 export default function HomeStack() {
   return (
-    <Stack.Navigator screenOption={{headerShown: false}}>
-      <Stack.Screen name='Home' component={HomeScreen} />
+    <Stack.Navigator>
+      <Stack.Screen name='Home' component={MainTabScreen} options={{ headerShown: false }}  />
     </Stack.Navigator>
   );
 }
