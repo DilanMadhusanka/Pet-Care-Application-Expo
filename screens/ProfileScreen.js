@@ -15,6 +15,8 @@ import * as ImagePicker from 'expo-image-picker';
 const auth = Firebase.auth();
 
 const ProfileScreen = () => {
+
+  const [selectedImage, setSelectedImage] = React.useState(null);
    
   const { user } = useContext(AuthenticatedUserContext);
   const handleSignOut = async () => {
@@ -36,13 +38,13 @@ const ProfileScreen = () => {
     >
       {/* <Text>Swipe down to close</Text> */}
 
-      <Button title="Go" onPress={onChooseImagePress} />
+      <Button title="Camera" onPress={onChooseImageCameraPress} />
+      <Button title="Gallery" onPress={onChooseImageGalleryPress} />
     </View>
   );
   
-  const onChooseImagePress = async () => {
+  const onChooseImageCameraPress = async () => {
     let result = await ImagePicker.launchCameraAsync();
-    // let result = await ImagePicker.launchImageLibraryAsync();
 
     if(!result.cancelled) {
       uploadImage(result.uri).then(() => {
@@ -53,7 +55,21 @@ const ProfileScreen = () => {
     }
   }
 
-  const uploadImage = async (uri) => {}
+  const onChooseImageGalleryPress = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync();
+
+    if(!result.cancelled) {
+      uploadImage(result.uri).then(() => {
+        sheetRef.current.snapTo(2);
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+  }
+
+  const uploadImage = async (uri) => {
+    setSelectedImage({ localUri: uri });
+  }
 
   const sheetRef = React.useRef(null);
 
@@ -68,9 +84,10 @@ const ProfileScreen = () => {
             style={styles.logoutIcon}
             onPress={handleSignOut} 
           />
+          
 
           <Pressable onPress={() => sheetRef.current.snapTo(0)}>
-            <Image style={styles.userImage} source={require('../assets/user-pet.jpg')}  />
+            <Image style={styles.userImage} source={selectedImage!= null ?{ uri: selectedImage.localUri} : {uri: Image.resolveAssetSource(require('../assets/user-pet.jpg')).uri}}  />
           </Pressable>
 
         </View>
