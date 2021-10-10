@@ -12,6 +12,9 @@ import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 import * as ImagePicker from 'expo-image-picker';
 
+
+const storage = Firebase.storage();
+
 const auth = Firebase.auth();
 
 const ProfileScreen = () => {
@@ -69,6 +72,17 @@ const ProfileScreen = () => {
 
   const uploadImage = async (uri) => {
     setSelectedImage({ localUri: uri });
+
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    var ref = Firebase.storage().ref().child("my-image15");
+    // ref.getDownloadURL().then((url) => console.log(url))
+    return ref.put(blob).then(function(snapshot){
+      // $('#rainbowPhotoURL').val(snapshot.downloadURL);
+      // console.log(snapshot.downloadURL);
+      ref.getDownloadURL().then((url) => console.log(url))
+    })
+
   }
 
   const sheetRef = React.useRef(null);
