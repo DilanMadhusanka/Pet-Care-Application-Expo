@@ -11,6 +11,19 @@ import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvide
 import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 import * as ImagePicker from 'expo-image-picker';
+import 'firebase/storage';
+
+import { LogBox } from 'react-native';
+import _ from 'lodash';
+
+LogBox.ignoreLogs(['Warning:...']); // ignore specific logs
+LogBox.ignoreAllLogs(); // ignore all logs
+const _console = _.clone(console);
+console.warn = message => {
+if (message.indexOf('Setting a timer') <= -1) {
+   _console.warn(message);
+   }
+};
 
 
 const storage = Firebase.storage();
@@ -75,7 +88,7 @@ const ProfileScreen = () => {
 
     const response = await fetch(uri);
     const blob = await response.blob();
-    var ref = Firebase.storage().ref().child("my-image15");
+    var ref = Firebase.storage().ref().child("my-image155");
     // ref.getDownloadURL().then((url) => console.log(url))
     return ref.put(blob).then(function(snapshot){
       // $('#rainbowPhotoURL').val(snapshot.downloadURL);
