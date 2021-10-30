@@ -57,7 +57,13 @@ const DATA = [
   },
 ];
 
-const renderItem = ({ item }) => <ExploreCardView title={item.title} desc={item.description} image={item.imageUrl} />;
+const renderItem = ({ item }) => {
+    return (
+        <View>
+            <Text>{item.title}</Text>
+        </View>
+    )
+};
 
 const clickHandler = () => {
   //function to handle click on floating Action Button
@@ -67,6 +73,7 @@ const clickHandler = () => {
 const SolutionScreen = ({route, navigation}) => {
 
     const [selectedImage, setSelectedImage] = useState(null);
+    const { title, desc, image } = route.params;
 
 //   const dbRef = Firebase.firestore().collection('problems');
 //   const [problemDetailsArr, setProblemDetailsArr] = useState([]);
@@ -96,8 +103,14 @@ const SolutionScreen = ({route, navigation}) => {
 
     return (
       <SafeAreaView style={styles.container}>
-        {/* <FlatList data={DATA} renderItem={renderItem} keyExtractor={item => item.key} style={styles.flatListContainer} /> */}
-        <Image style={styles.discImage} source={selectedImage!= null ?{ uri: selectedImage.localUri} : {uri: null}}  />
+        <View style={styles.problemContainer}>
+            <Text style={styles.problemTitleStyle}>{title}</Text>
+            <Text>{desc}</Text>
+            <Image style={styles.discImage} source={{ uri: image}}  />
+        </View>
+
+        <FlatList data={DATA} renderItem={renderItem} keyExtractor={item => item.id} style={styles.flatListContainer} />
+
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={()=> alert('Floating Button Clicked')}
@@ -133,7 +146,7 @@ const styles = StyleSheet.create({
   },
   discImage: {
     width: '100%',
-    height: 200,
+    height: 100,
     alignSelf: 'center',
     borderRadius: 10,
     borderWidth: 2,
@@ -141,5 +154,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'gainsboro',
     marginTop: 25,
   },
+
+  problemContainer: {
+    width: '100%',
+    backgroundColor: 'white',
+    padding: 20,
+    elevation: 2
+  },
+  problemTitleStyle: {
+      fontWeight: 'bold',
+      marginBottom: 5
+  },
+
+  problemDescStyle: {}
 });
   

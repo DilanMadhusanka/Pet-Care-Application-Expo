@@ -16,7 +16,6 @@ const ExploreCardView = ({title, desc, image, navigation}) => {
       title: title,
       desc: desc,
       image: image,
-      navigation: navigation
     })
   };
 
@@ -48,6 +47,7 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         backgroundColor: 'white',
         marginTop: 10,
+        elevation: 12
       },
       cardContent: {
         flexDirection: 'row',
