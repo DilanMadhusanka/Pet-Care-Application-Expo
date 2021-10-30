@@ -1,16 +1,34 @@
 import React from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 
-const ExploreCardView = ({title, desc, image}) => {
+const clickHandler = () => {
+  //function to handle click on floating Action Button
+  alert('Floating Button Clicked');
+};
+
+const ExploreCardView = ({title, desc, image, navigation}) => {
+
+
+  const clickHandler = () => {
+    //function to handle click on floating Action Button
+    // alert('Floating Button Clicked');
+    navigation.navigate('Solution', {
+      title: title,
+      desc: desc,
+      image: image,
+      navigation: navigation
+    })
+  };
+
     return (
         <View style={styles.cardContainer}>
-            <View style={styles.cardContent}>
+            <TouchableOpacity onPress={clickHandler} style={styles.cardContent}>
             <Image source={{uri: image}} style={styles.cardImage}/>
                 <View style={ styles.cardContentText}>
                     <Text style={styles.cardContentTitle}>{title}</Text>
                 </View>
                 {/* <MaterialIcons name="navigate-next" size={40} color="red" /> */}
-            </View>
+            </TouchableOpacity>
         </View>
     );
 }

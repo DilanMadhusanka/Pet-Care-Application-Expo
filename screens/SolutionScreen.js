@@ -57,49 +57,50 @@ const DATA = [
   },
 ];
 
+const renderItem = ({ item }) => <ExploreCardView title={item.title} desc={item.description} image={item.imageUrl} />;
+
 const clickHandler = () => {
   //function to handle click on floating Action Button
   alert('Floating Button Clicked');
 };
 
-const ExploreScreen = ({navigation}) => {
+const SolutionScreen = ({route, navigation}) => {
 
-  const renderItem = ({ item }) => <ExploreCardView title={item.title} desc={item.description} image={item.imageUrl} navigation={navigation} />;
+    const [selectedImage, setSelectedImage] = useState(null);
 
-  const dbRef = Firebase.firestore().collection('problems');
-  const [problemDetailsArr, setProblemDetailsArr] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+//   const dbRef = Firebase.firestore().collection('problems');
+//   const [problemDetailsArr, setProblemDetailsArr] = useState([]);
+//   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log(
-      "This only happens ONCE.  But it happens AFTER the initial render."
-    );
-    const unsubscribe = dbRef.onSnapshot(getCollection);
+    console.log(route.params)
+    // const unsubscribe = dbRef.onSnapshot(getCollection);
   }, []);
 
 
-  const getCollection = (querySnapshot) => {
-    const problemsArr = []
-    querySnapshot.forEach((res) => {
-      const { title, description, imageUrl } = res.data();
-      problemsArr.push({
-        key: res.id,
-        res,
-        title,
-        description,
-        imageUrl,
-      });
-    });
-    setProblemDetailsArr(problemsArr)
-    setIsLoading(false)
-  }
+//   const getCollection = (querySnapshot) => {
+//     const problemsArr = []
+//     querySnapshot.forEach((res) => {
+//       const { title, description, imageUrl } = res.data();
+//       problemsArr.push({
+//         key: res.id,
+//         res,
+//         title,
+//         description,
+//         imageUrl,
+//       });
+//     });
+//     setProblemDetailsArr(problemsArr)
+//     setIsLoading(false)
+//   }
 
     return (
       <SafeAreaView style={styles.container}>
-        <FlatList data={problemDetailsArr} renderItem={renderItem} keyExtractor={item => item.key} style={styles.flatListContainer} />
+        {/* <FlatList data={DATA} renderItem={renderItem} keyExtractor={item => item.key} style={styles.flatListContainer} /> */}
+        <Image style={styles.discImage} source={selectedImage!= null ?{ uri: selectedImage.localUri} : {uri: null}}  />
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={()=> navigation.navigate("AddProblemView")}
+          onPress={()=> alert('Floating Button Clicked')}
           style={styles.touchableOpacityStyle}>
             <Entypo name="plus" size={28} color="white" />
         </TouchableOpacity>
@@ -108,12 +109,13 @@ const ExploreScreen = ({navigation}) => {
     );
 };
 
-export default ExploreScreen;
+export default SolutionScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
+    marginHorizontal: 10
   },
 
   flatListContainer: {},
@@ -128,6 +130,16 @@ const styles = StyleSheet.create({
     bottom: 30,
     backgroundColor: '#FF7070',
     borderRadius: 100
-  }
+  },
+  discImage: {
+    width: '100%',
+    height: 200,
+    alignSelf: 'center',
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: 'gainsboro',
+    backgroundColor: 'gainsboro',
+    marginTop: 25,
+  },
 });
   

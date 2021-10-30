@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import ExploreScreen from '../screens/ExploreScreen';
 import AddProblemScreen from '../screens/AddProblemScreen';
+import SolutionScreen from '../screens/SolutionScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,17 @@ export default function AuthStack() {
                  backgroundColor: '#FF7070'
                  }, 
         }} />
+        <Stack.Screen 
+            name='Solution' 
+            component={SolutionScreen} 
+            options={{
+                title: 'Solution', 
+                headerTintColor: 'white',
+                headerLeft: null, 
+                headerStyle: {
+                    backgroundColor: '#FF7070'
+                    }, 
+            }} />
     </Stack.Navigator>
   );
 }
