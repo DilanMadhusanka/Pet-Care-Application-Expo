@@ -12,7 +12,7 @@ import { AntDesign } from '@expo/vector-icons';
 import uuid from 'react-native-uuid';
 
 
-export default function AddProblemScreen() {
+export default function AddProblemScreen({navigation}) {
 
     useEffect(() => {
         console.log(
@@ -44,6 +44,7 @@ export default function AddProblemScreen() {
             setProblemTitle('')
             setProblemDescription('')
             setIsLoading(false)
+            navigation.goBack();
           })
           .catch((err) => {
             console.error("Error found: ", err);
