@@ -8,6 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Firebase from '../config/firebase';
 import 'firebase/storage';
 import { AntDesign } from '@expo/vector-icons';
+import uuid from 'react-native-uuid';
 
 
 export default function AddProblemScreen() {
@@ -66,7 +67,7 @@ export default function AddProblemScreen() {
     
         const response = await fetch(uri);
         const blob = await response.blob();
-        var ref = Firebase.storage().ref().child("my-image");
+        var ref = Firebase.storage().ref().child(uuid.v4());
         // ref.getDownloadURL().then((url) => console.log(url))
         return ref.put(blob).then(function(snapshot){
           // $('#rainbowPhotoURL').val(snapshot.downloadURL);
