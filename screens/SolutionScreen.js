@@ -5,6 +5,7 @@ import { FloatingAction } from "react-native-floating-action";
 import ExploreCardView from '../components/ExploreCardView';
 import Firebase from '../config/firebase';
 import 'firebase/firestore';
+import SolutionCardView from "../components/SolutionCardView";
 
 const DATA = [
   {
@@ -57,13 +58,7 @@ const DATA = [
   },
 ];
 
-const renderItem = ({ item }) => {
-    return (
-        <View>
-            <Text>{item.title}</Text>
-        </View>
-    )
-};
+const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item.desc} image={item.imageUrl} />
 
 const clickHandler = () => {
   //function to handle click on floating Action Button
