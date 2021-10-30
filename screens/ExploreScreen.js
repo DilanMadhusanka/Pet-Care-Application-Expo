@@ -68,7 +68,7 @@ const ExploreScreen = ({navigation}) => {
         <FlatList data={DATA} renderItem={renderItem} keyExtractor={item => item.id} style={styles.flatListContainer} />
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={clickHandler}
+          onPress={()=> navigation.navigate("AddProblemView")}
           style={styles.touchableOpacityStyle}>
             <Entypo name="plus" size={28} color="white" />
         </TouchableOpacity>

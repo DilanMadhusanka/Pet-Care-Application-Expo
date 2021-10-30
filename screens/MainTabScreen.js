@@ -4,6 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import ExploreScreen from './ExploreScreen';
 import HomeScreen from './HomeScreen';
 import ProfileScreen from './ProfileScreen';
+import ExploreStack from '../navigation/ExploreStack'
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -26,7 +27,7 @@ const MainTabScreen = () => {
       />
       <Tab.Screen
         name="Explore"
-        component={ExploreScreen}
+        component={ExploreStack}
         options={{
           tabBarLabel: 'Explore',
           tabBarIcon: ({ color }) => (
