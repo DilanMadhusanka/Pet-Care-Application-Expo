@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Image, View, SafeAreaView, ScrollView, Text, StatusBar, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { Image, View, SafeAreaView, ScrollView, Text, StatusBar, StyleSheet, ActivityIndicator } from 'react-native';
 import CardView from "../components/CardView";
 import { InputField, Button } from '../components';
 import BottomSheet from 'reanimated-bottom-sheet';
@@ -7,17 +7,52 @@ import { Fragment } from "react";
 import * as ImagePicker from 'expo-image-picker';
 import Firebase from '../config/firebase';
 import 'firebase/storage';
+import 'firebase/firestore';
 import { AntDesign } from '@expo/vector-icons';
 import uuid from 'react-native-uuid';
 
 
 export default function AddProblemScreen() {
+
+    useEffect(() => {
+        console.log(
+          "This only happens ONCE.  But it happens AFTER the initial render."
+        );
+      }, []);
+
+    const dbRef = Firebase.firestore().collection('problems');
   
     const [problemTitle, setProblemTitle] = useState('');
     const [problemDescription, setProblemDescription] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
+    const [problemImageUrl, setProblemImageUrl] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const sheetRef = React.useRef(null);
+
+
+    const storeProblem = () => {
+        if(problemTitle === '' || problemDescription === ''){
+            alert('Fill at least your problem title and problem description!')
+        } else {
+          setIsLoading(true)    
+          dbRef.add({
+            title: problemTitle,
+            description: problemDescription,
+            imageUrl: problemImageUrl
+          }).then((res) => {
+            setProblemTitle('')
+            setProblemDescription('')
+            setIsLoading(false)
+          })
+          .catch((err) => {
+            console.error("Error found: ", err);
+            setIsLoading(false)
+          });
+        }
+      }
+
+
 
     const renderContent = () => (
         <View
@@ -72,11 +107,21 @@ export default function AddProblemScreen() {
         return ref.put(blob).then(function(snapshot){
           // $('#rainbowPhotoURL').val(snapshot.downloadURL);
           // console.log(snapshot.downloadURL);
-          ref.getDownloadURL().then((url) => console.log(url))
+            ref.getDownloadURL().then((url) => {
+                console.log(url)
+                setProblemImageUrl(url)
+            })
         })
     
     }
 
+    if(isLoading){
+        return(
+            <View style={styles.preloader}>
+            <ActivityIndicator size="large" color="#9E9E9E"/>
+            </View>
+        )
+    }
 
   return (
     <Fragment>
@@ -151,7 +196,7 @@ export default function AddProblemScreen() {
 
             <View >
                 <Button
-                    onPress={null}
+                    onPress={() => storeProblem()}
                     backgroundColor='#FF7070'
                     title='Submit'
                     tileColor='#fff'
@@ -233,5 +278,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 20,
     fontSize: 15
+  },
+  preloader: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
