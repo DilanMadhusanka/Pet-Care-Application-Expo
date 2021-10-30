@@ -1,11 +1,13 @@
 import { Entypo } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, SafeAreaView, FlatList, StatusBar, TouchableOpacity, Image } from 'react-native';
+import { View, Text, Button, StyleSheet, SafeAreaView, FlatList, StatusBar, TouchableOpacity, Image, Modal, Dimensions, TextInput } from 'react-native';
 import { FloatingAction } from "react-native-floating-action";
 import ExploreCardView from '../components/ExploreCardView';
 import Firebase from '../config/firebase';
 import 'firebase/firestore';
 import SolutionCardView from "../components/SolutionCardView";
+
+const { width } = Dimensions.get("window");
 
 const DATA = [
   {
@@ -67,6 +69,17 @@ const clickHandler = () => {
 
 const SolutionScreen = ({route, navigation}) => {
 
+    const [isModalVisible, setModalVisible] = useState(false);
+  
+    // This is to manage TextInput State
+    const [inputValue, setInputValue] = useState("");
+  
+    // Create toggleModalVisibility function that will
+    // Open and close modal upon button clicks.
+    const toggleModalVisibility = () => {
+        setModalVisible(!isModalVisible);
+    };
+
     const [selectedImage, setSelectedImage] = useState(null);
     const { title, desc, image } = route.params;
 
@@ -106,9 +119,27 @@ const SolutionScreen = ({route, navigation}) => {
 
         <FlatList data={DATA} renderItem={renderItem} keyExtractor={item => item.id} style={styles.flatListContainer} />
 
+
+        <Modal animationType="slide" 
+                   transparent visible={isModalVisible} 
+                   presentationStyle="overFullScreen" 
+                   onDismiss={toggleModalVisibility}>
+                <View style={styles.viewWrapper}>
+                    <View style={styles.modalView}>
+                        <TextInput placeholder="Enter something..." 
+                                   value={inputValue} style={styles.textInput} 
+                                   onChangeText={(value) => setInputValue(value)} />
+  
+                        {/** This button is responsible to close the modal */}
+                        <Button title="Close" onPress={toggleModalVisibility} />
+                    </View>
+                </View>
+        </Modal>
+
+
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={()=> alert('Floating Button Clicked')}
+          onPress={toggleModalVisibility}
           style={styles.touchableOpacityStyle}>
             <Entypo name="plus" size={28} color="white" />
         </TouchableOpacity>
@@ -161,6 +192,36 @@ const styles = StyleSheet.create({
       marginBottom: 5
   },
 
-  problemDescStyle: {}
+  problemDescStyle: {},
+
+  viewWrapper: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+},
+modalView: {
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    elevation: 5,
+    transform: [{ translateX: -(width * 0.4) }, 
+                { translateY: -90 }],
+    height: 180,
+    width: width * 0.8,
+    backgroundColor: "#fff",
+    borderRadius: 7,
+},
+textInput: {
+    width: "80%",
+    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderColor: "rgba(0, 0, 0, 0.2)",
+    borderWidth: 1,
+    marginBottom: 8,
+},
 });
   
