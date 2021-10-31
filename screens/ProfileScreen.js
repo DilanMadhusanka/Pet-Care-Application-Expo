@@ -64,11 +64,12 @@ const ProfileScreen = () => {
     dbRef.doc(user.uid).get().then(function(doc) {
       setIsUserExist(doc.exists)
       if (doc.exists) {
-        const { breed, age, weight, gender } = doc.data()
+        const { breed, age, weight, gender, userImageUrl } = doc.data()
         setBreed(breed)
         setAge(age)
         setWeight(weight),
         setGender(gender)
+        setUserImageUrl(userImageUrl)
       }
     })
 
@@ -84,7 +85,8 @@ const ProfileScreen = () => {
         breed,
         age,
         weight,
-        gender
+        gender,
+        userImageUrl
       }).then((res) => {
         setIsLoading(false)
         setIsUpdated(false)
@@ -141,12 +143,15 @@ const ProfileScreen = () => {
 
     const response = await fetch(uri);
     const blob = await response.blob();
-    var ref = Firebase.storage().ref().child("my-image155");
+    var ref = Firebase.storage().ref().child("my-image");
     // ref.getDownloadURL().then((url) => console.log(url))
     return ref.put(blob).then(function(snapshot){
       // $('#rainbowPhotoURL').val(snapshot.downloadURL);
       // console.log(snapshot.downloadURL);
-      ref.getDownloadURL().then((url) => console.log(url))
+      ref.getDownloadURL().then((url) => {
+        setUserImageUrl(url)
+        storeUserProfile()
+      })
     })
 
   }
@@ -167,7 +172,7 @@ const ProfileScreen = () => {
           
 
           <Pressable onPress={() => sheetRef.current.snapTo(0)}>
-            <Image style={styles.userImage} source={selectedImage!= null ?{ uri: selectedImage.localUri} : {uri: Image.resolveAssetSource(require('../assets/user-pet.jpg')).uri}}  />
+            <Image style={styles.userImage} source={userImageUrl!= null ?{ uri: userImageUrl} : {uri: Image.resolveAssetSource(require('../assets/user-pet.jpg')).uri}}  />
           </Pressable>
 
         </View>
@@ -179,7 +184,7 @@ const ProfileScreen = () => {
           <StatusBar style='dark-content' />
 
           <View style={styles.row}>
-            {/* <Text style={styles.title}>Welcome {user.email}!</Text> */}
+            <Text style={styles.title}>Welcome {user.email.split('@')[0]}!</Text>
           </View>
           {/* <Text style={styles.text}>Your UID is: {user.uid} </Text>
 
