@@ -1,5 +1,5 @@
 
-import { Feather } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React, { useContext, useEffect, useState } from 'react';
 import { Fragment } from 'react';
@@ -62,9 +62,15 @@ const ProfileScreen = () => {
     );
     
     dbRef.doc(user.uid).get().then(function(doc) {
-      console.log(doc.exists)
-      console.log(doc.data())
       setIsUserExist(doc.exists)
+      if (doc.exists) {
+        const { breed, age, weight, gender, userImageUrl } = doc.data()
+        setBreed(breed)
+        setAge(age)
+        setWeight(weight),
+        setGender(gender)
+        setUserImageUrl(userImageUrl)
+      }
     })
 
   }, []);
@@ -79,7 +85,8 @@ const ProfileScreen = () => {
         breed,
         age,
         weight,
-        gender
+        gender,
+        userImageUrl
       }).then((res) => {
         setIsLoading(false)
         setIsUpdated(false)
@@ -94,16 +101,20 @@ const ProfileScreen = () => {
 
   const renderContent = () => (
     <View
-      style={{
-        backgroundColor: 'white',
-        padding: 16,
-        height: 450,
-      }}
+      style={styles.bottomSheetContainer}
     >
-      {/* <Text>Swipe down to close</Text> */}
+      <View>
+        <AntDesign style={{alignSelf: 'flex-end', marginTop: 0}} name="close" size={24} color="black" onPress={() => sheetRef.current.snapTo(2)} />
+      </View>
 
-      <Button title="Camera" onPress={onChooseImageCameraPress} />
-      <Button title="Gallery" onPress={onChooseImageGalleryPress} />
+      <Text style={styles.bottomSheetText}>Choose the Image Source</Text>
+
+      <View style={styles.bottomSheetButtonCamera}>
+        <Button title="Camera" backgroundColor='#FF7070' onPress={onChooseImageCameraPress} />
+      </View>
+      <View style={styles.bottomSheetButtonGallery}>
+        <Button title="Gallery" backgroundColor='#FF7070' onPress={onChooseImageGalleryPress} />
+      </View>
     </View>
   );
   
@@ -136,12 +147,15 @@ const ProfileScreen = () => {
 
     const response = await fetch(uri);
     const blob = await response.blob();
-    var ref = Firebase.storage().ref().child("my-image155");
+    var ref = Firebase.storage().ref().child("my-image");
     // ref.getDownloadURL().then((url) => console.log(url))
     return ref.put(blob).then(function(snapshot){
       // $('#rainbowPhotoURL').val(snapshot.downloadURL);
       // console.log(snapshot.downloadURL);
-      ref.getDownloadURL().then((url) => console.log(url))
+      ref.getDownloadURL().then((url) => {
+        setUserImageUrl(url)
+        storeUserProfile()
+      })
     })
 
   }
@@ -162,7 +176,7 @@ const ProfileScreen = () => {
           
 
           <Pressable onPress={() => sheetRef.current.snapTo(0)}>
-            <Image style={styles.userImage} source={selectedImage!= null ?{ uri: selectedImage.localUri} : {uri: Image.resolveAssetSource(require('../assets/user-pet.jpg')).uri}}  />
+            <Image style={styles.userImage} source={userImageUrl!= null ?{ uri: userImageUrl} : {uri: Image.resolveAssetSource(require('../assets/user-pet.jpg')).uri}}  />
           </Pressable>
 
         </View>
@@ -174,7 +188,7 @@ const ProfileScreen = () => {
           <StatusBar style='dark-content' />
 
           <View style={styles.row}>
-            {/* <Text style={styles.title}>Welcome {user.email}!</Text> */}
+            <Text style={styles.title}>Welcome {user.email.split('@')[0]}!</Text>
           </View>
           {/* <Text style={styles.text}>Your UID is: {user.uid} </Text>
 
@@ -366,7 +380,7 @@ const ProfileScreen = () => {
       
       <BottomSheet
         ref={sheetRef}
-        snapPoints={[450, 300, 0]}
+        snapPoints={[250, 100, 0]}
         initialSnap={2}
         borderRadius={10}
         renderContent={renderContent}
@@ -431,6 +445,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 0
+  },
+
+  bottomSheetContainer: {
+    backgroundColor: 'white',
+    padding: 16,
+    height: 450,
+  },
+  bottomSheetButtonCamera: {
+      marginTop: 20
+  },
+  bottomSheetButtonGallery: {
+      marginTop: 10
+  },
+  bottomSheetText: {
+    alignSelf: 'center',
+    marginTop: 20,
+    fontSize: 15
+  },
+  preloader: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
   
