@@ -84,7 +84,7 @@ const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item
   const toggleModalVisibility = () => {
       setModalVisible(!isModalVisible);
   };
-  const { title, desc, image } = route.params;
+  const { problemKey, title, desc, image } = route.params;
 
   useEffect(() => {
     // console.log(route.params)
@@ -96,13 +96,15 @@ const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item
   const getCollection = (querySnapshot) => {
     const solutionArr = []
     querySnapshot.forEach((res) => {
-      const { title, description } = res.data();
-      solutionArr.push({
-        key: res.id,
-        res,
-        title,
-        description,
-      });
+      const { problemId, title, description } = res.data();
+      if (problemId == problemKey) {
+        solutionArr.push({
+          key: res.id,
+          res,
+          title,
+          description,
+        });
+      }
     });
     setSolutionDetailsArr(solutionArr)
     setIsLoading(false)
@@ -117,6 +119,7 @@ const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item
     } else {
       setIsLoading(true)    
       dbRef.add({
+        problemId: problemKey,
         title: user.email.split('@')[0],
         description: solution,
       }).then((res) => {

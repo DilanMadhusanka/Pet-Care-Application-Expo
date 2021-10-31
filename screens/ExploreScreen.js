@@ -64,7 +64,7 @@ const clickHandler = () => {
 
 const ExploreScreen = ({navigation}) => {
 
-  const renderItem = ({ item }) => <ExploreCardView title={item.title} desc={item.description} image={item.imageUrl} navigation={navigation} />;
+  const renderItem = ({ item }) => <ExploreCardView problemKey={item.key} title={item.title} desc={item.description} image={item.imageUrl} navigation={navigation} />;
 
   const dbRef = Firebase.firestore().collection('problems');
   const [problemDetailsArr, setProblemDetailsArr] = useState([]);

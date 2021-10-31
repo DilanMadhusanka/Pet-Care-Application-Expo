@@ -6,13 +6,14 @@ const clickHandler = () => {
   alert('Floating Button Clicked');
 };
 
-const ExploreCardView = ({title, desc, image, navigation}) => {
+const ExploreCardView = ({problemKey, title, desc, image, navigation}) => {
 
 
   const clickHandler = () => {
     //function to handle click on floating Action Button
     // alert('Floating Button Clicked');
     navigation.navigate('Solution', {
+      problemKey: problemKey,
       title: title,
       desc: desc,
       image: image,
