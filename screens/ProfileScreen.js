@@ -1,5 +1,5 @@
 
-import { Feather } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React, { useContext, useEffect, useState } from 'react';
 import { Fragment } from 'react';
@@ -101,16 +101,20 @@ const ProfileScreen = () => {
 
   const renderContent = () => (
     <View
-      style={{
-        backgroundColor: 'white',
-        padding: 16,
-        height: 450,
-      }}
+      style={styles.bottomSheetContainer}
     >
-      {/* <Text>Swipe down to close</Text> */}
+      <View>
+        <AntDesign style={{alignSelf: 'flex-end', marginTop: 0}} name="close" size={24} color="black" onPress={() => sheetRef.current.snapTo(2)} />
+      </View>
 
-      <Button title="Camera" onPress={onChooseImageCameraPress} />
-      <Button title="Gallery" onPress={onChooseImageGalleryPress} />
+      <Text style={styles.bottomSheetText}>Choose the Image Source</Text>
+
+      <View style={styles.bottomSheetButtonCamera}>
+        <Button title="Camera" backgroundColor='#FF7070' onPress={onChooseImageCameraPress} />
+      </View>
+      <View style={styles.bottomSheetButtonGallery}>
+        <Button title="Gallery" backgroundColor='#FF7070' onPress={onChooseImageGalleryPress} />
+      </View>
     </View>
   );
   
@@ -376,7 +380,7 @@ const ProfileScreen = () => {
       
       <BottomSheet
         ref={sheetRef}
-        snapPoints={[450, 300, 0]}
+        snapPoints={[250, 100, 0]}
         initialSnap={2}
         borderRadius={10}
         renderContent={renderContent}
@@ -441,6 +445,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 0
+  },
+
+  bottomSheetContainer: {
+    backgroundColor: 'white',
+    padding: 16,
+    height: 450,
+  },
+  bottomSheetButtonCamera: {
+      marginTop: 20
+  },
+  bottomSheetButtonGallery: {
+      marginTop: 10
+  },
+  bottomSheetText: {
+    alignSelf: 'center',
+    marginTop: 20,
+    fontSize: 15
+  },
+  preloader: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
   
