@@ -74,6 +74,8 @@ const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [solutionDetailsArr, setSolutionDetailsArr] = useState([]);
+  const [solution, setSolution] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   
   // This is to manage TextInput State
   const [inputValue, setInputValue] = useState("");
@@ -83,16 +85,12 @@ const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item
   const toggleModalVisibility = () => {
       setModalVisible(!isModalVisible);
   };
-
-  const [selectedImage, setSelectedImage] = useState(null);
   const { title, desc, image } = route.params;
-
-//   const [problemDetailsArr, setProblemDetailsArr] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // console.log(route.params)
     const unsubscribe = dbRef.onSnapshot(getCollection);
+    unsubscribe
   }, []);
 
 
@@ -110,6 +108,30 @@ const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item
     setSolutionDetailsArr(solutionArr)
     setIsLoading(false)
   }
+
+
+  const storeSolution = () => {
+    if(solution === ''){
+        alert('Please enter your solution!')
+        toggleModalVisibility()
+
+    } else {
+      setIsLoading(true)    
+      dbRef.add({
+        title: 'mass',
+        description: solution,
+      }).then((res) => {
+        toggleModalVisibility()
+        setSolution('')
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        console.error("Error found: ", err);
+        setIsLoading(false)
+      });
+    }
+  }
+
 
     return (
       <SafeAreaView style={styles.container}>
@@ -157,15 +179,15 @@ const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item
                           autoCapitalize='none'
                           autoCorrect={false}
                           textContentType='none'
-                          value={null}
-                          onChangeText={text => console.log(text)}
+                          value={solution}
+                          onChangeText={text => setSolution(text)}
                           multiline={true}
                       />
 
                       <Button
-                        onPress={toggleModalVisibility}
+                        onPress={storeSolution}
                         backgroundColor='#FF7070'
-                        title='Close'
+                        title='Submit'
                         tileColor='#fff'
                         titleSize={15}
                         containerStyle={{
