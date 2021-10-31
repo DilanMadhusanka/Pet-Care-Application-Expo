@@ -1,5 +1,5 @@
 import { Entypo } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, FlatList, StatusBar, TouchableOpacity, Image, Modal, Dimensions } from 'react-native';
 import { FloatingAction } from "react-native-floating-action";
 import { InputField, Button } from '../components';
@@ -7,6 +7,7 @@ import ExploreCardView from '../components/ExploreCardView';
 import Firebase from '../config/firebase';
 import 'firebase/firestore';
 import SolutionCardView from "../components/SolutionCardView";
+import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 
 const { width } = Dimensions.get("window");
 
@@ -71,14 +72,12 @@ const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item
   const SolutionScreen = ({route, navigation}) => {
 
   const dbRef = Firebase.firestore().collection('solutions');
+  const { user } = useContext(AuthenticatedUserContext);
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [solutionDetailsArr, setSolutionDetailsArr] = useState([]);
   const [solution, setSolution] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
-  // This is to manage TextInput State
-  const [inputValue, setInputValue] = useState("");
   
   // Create toggleModalVisibility function that will
   // Open and close modal upon button clicks.
@@ -118,7 +117,7 @@ const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item
     } else {
       setIsLoading(true)    
       dbRef.add({
-        title: 'mass',
+        title: user.email.split('@')[0],
         description: solution,
       }).then((res) => {
         toggleModalVisibility()
