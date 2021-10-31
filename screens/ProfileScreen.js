@@ -62,9 +62,14 @@ const ProfileScreen = () => {
     );
     
     dbRef.doc(user.uid).get().then(function(doc) {
-      console.log(doc.exists)
-      console.log(doc.data())
       setIsUserExist(doc.exists)
+      if (doc.exists) {
+        const { breed, age, weight, gender } = doc.data()
+        setBreed(breed)
+        setAge(age)
+        setWeight(weight),
+        setGender(gender)
+      }
     })
 
   }, []);
