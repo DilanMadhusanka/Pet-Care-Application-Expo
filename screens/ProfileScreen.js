@@ -1,9 +1,9 @@
 
 import { Feather } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Fragment } from 'react';
-import { Image, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Button, IconButton, InputField } from '../components';
 import Firebase from '../config/firebase';
@@ -12,6 +12,7 @@ import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 import * as ImagePicker from 'expo-image-picker';
 import 'firebase/storage';
+import 'firebase/firestore';
 
 import { LogBox } from 'react-native';
 import _ from 'lodash';
@@ -32,7 +33,18 @@ const auth = Firebase.auth();
 
 const ProfileScreen = () => {
 
-  const [selectedImage, setSelectedImage] = React.useState(null);
+  const dbRef = Firebase.firestore().collection('users');
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [breed, setBreed] = useState('');
+  const [age, setAge] = useState('');
+  const [weight, setWeight] = useState('');
+  const [gender, setGender] = useState('');
+  const [neutered, setNeutered] = useState('');
+  const [userImageUrl, setUserImageUrl] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUpdated, setIsUpdated] = useState(false);
+  const [isUserExist, setIsUserExist] = useState(false);
    
   const { user } = useContext(AuthenticatedUserContext);
   const handleSignOut = async () => {
@@ -42,6 +54,42 @@ const ProfileScreen = () => {
       console.log(error);
     }
   };
+  
+
+  useEffect(() => {
+    console.log(
+      "This only happens ONCE.  But it happens AFTER the initial render."
+    );
+    
+    dbRef.doc(user.uid).get().then(function(doc) {
+      console.log(doc.exists)
+      console.log(doc.data())
+      setIsUserExist(doc.exists)
+    })
+
+  }, []);
+
+
+  const storeUserProfile = () => {
+
+    const updateDBRef = Firebase.firestore().collection('users').doc(user.uid);
+    
+      setIsLoading(true)    
+      updateDBRef.set({
+        breed,
+        age,
+        weight,
+        gender
+      }).then((res) => {
+        setIsLoading(false)
+        setIsUpdated(false)
+      })
+      .catch((err) => {
+        console.error("Error found: ", err);
+        setIsLoading(false)
+        setIsUpdated(false)
+      });
+  }
 
 
   const renderContent = () => (
@@ -121,14 +169,14 @@ const ProfileScreen = () => {
       </SafeAreaView>
 
       <SafeAreaView style={styles.bottomContainer}>
-        <View>
+        <ScrollView showsVerticalScrollIndicator ={false}>
 
           <StatusBar style='dark-content' />
 
           <View style={styles.row}>
             {/* <Text style={styles.title}>Welcome {user.email}!</Text> */}
           </View>
-          <Text style={styles.text}>Your UID is: {user.uid} </Text>
+          {/* <Text style={styles.text}>Your UID is: {user.uid} </Text>
 
           <InputField
             inputStyle={{
@@ -144,10 +192,45 @@ const ProfileScreen = () => {
             autoCapitalize='none'
             keyboardType='email-address'
             textContentType='emailAddress'
-            autoFocus={true}
+            autoFocus={false}
             value={user.email}
             onChangeText={text => console.log(text)}
-          />
+          /> */}
+
+          {/* <View
+            style={{
+              borderBottomColor: 'black',
+              borderBottomWidth: 1,
+            }}
+          /> */}
+
+          <View style={styles.userDetailsContainer}>
+
+            <Text>Breed</Text>
+
+            <InputField
+              inputStyle={{
+                fontSize: 14
+              }}
+              containerStyle={{
+                backgroundColor: '#eee',
+                marginBottom: 0,
+                borderRadius: 20,
+                marginLeft: 150,
+              }}
+              placeholder='Enter Breed'
+              autoCapitalize='none'
+              keyboardType='default'
+              textContentType='none'
+              autoFocus={false}
+              value={breed}
+              onChangeText={text => {
+                setIsUpdated(true)
+                setBreed(text)
+              }}
+            />
+
+          </View>
 
           <View
             style={{
@@ -155,8 +238,130 @@ const ProfileScreen = () => {
               borderBottomWidth: 1,
             }}
           />
+
+          <View style={styles.userDetailsContainer}>
+
+            <Text>Age</Text>
+
+            <InputField
+              inputStyle={{
+                fontSize: 14
+              }}
+              containerStyle={{
+                backgroundColor: '#eee',
+                marginBottom: 0,
+                borderRadius: 20,
+                marginLeft: 161,
+              }}
+              placeholder='Enter Age'
+              autoCapitalize='none'
+              keyboardType='default'
+              textContentType='none'
+              autoFocus={false}
+              value={age}
+              onChangeText={text => {
+                setIsUpdated(true)
+                setAge(text)
+              }}
+            />
+
+          </View>
+
+          <View
+            style={{
+              borderBottomColor: 'black',
+              borderBottomWidth: 1,
+              marginBottom:1
+            }}
+          />
+
+          <View style={styles.userDetailsContainer}>
+
+            <Text>Weight</Text>
+
+            <InputField
+              inputStyle={{
+                fontSize: 14
+              }}
+              containerStyle={{
+                backgroundColor: '#eee',
+                marginBottom: 0,
+                borderRadius: 20,
+                marginLeft: 142,
+              }}
+              placeholder='Enter Weight'
+              autoCapitalize='none'
+              keyboardType='default'
+              textContentType='none'
+              autoFocus={false}
+              value={weight}
+              onChangeText={text => {
+                setIsUpdated(true)
+                setWeight(text)
+              }}
+            />
+
+          </View>
+
+          <View
+            style={{
+              borderBottomColor: 'black',
+              borderBottomWidth: 1,
+            }}
+          />
+
+          <View style={styles.userDetailsContainer}>
+
+            <Text>Gender</Text>
+
+            <InputField
+              inputStyle={{
+                fontSize: 14
+              }}
+              containerStyle={{
+                backgroundColor: '#eee',
+                marginBottom: 0,
+                borderRadius: 20,
+                marginLeft: 140,
+              }}
+              placeholder='Enter Gender'
+              autoCapitalize='none'
+              keyboardType='default'
+              textContentType='none'
+              autoFocus={false}
+              value={gender}
+              onChangeText={text => {
+                setIsUpdated(true)
+                setGender(text)
+              }}
+            />
+
+          </View>
+
+          <View
+            style={{
+              borderBottomColor: 'black',
+              borderBottomWidth: 1,
+            }}
+          />
+
+          {
+          isUpdated ? 
+            <Button
+              onPress={storeUserProfile}
+              backgroundColor='#FF7070'
+              title='Save'
+              tileColor='#fff'
+              titleSize={20}
+              containerStyle={{
+                marginBottom: 10,
+                marginTop: 20
+              }}
+            /> : 
+            null
+          }
           
-        </View>
+        </ScrollView>
       </SafeAreaView>
       
       <BottomSheet
@@ -220,5 +425,12 @@ const styles = StyleSheet.create({
       fontWeight: 'normal',
       color: '#000'
   },
+
+  userDetailsContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 0
+  }
 });
   
