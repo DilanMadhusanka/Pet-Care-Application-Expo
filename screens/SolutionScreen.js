@@ -1,7 +1,8 @@
 import { Entypo } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, SafeAreaView, FlatList, StatusBar, TouchableOpacity, Image, Modal, Dimensions, TextInput } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, StatusBar, TouchableOpacity, Image, Modal, Dimensions } from 'react-native';
 import { FloatingAction } from "react-native-floating-action";
+import { InputField, Button } from '../components';
 import ExploreCardView from '../components/ExploreCardView';
 import Firebase from '../config/firebase';
 import 'firebase/firestore';
@@ -129,12 +130,53 @@ const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item
                    onDismiss={toggleModalVisibility}>
                 <View style={styles.viewWrapper}>
                     <View style={styles.modalView}>
-                        <TextInput placeholder="Enter something..." 
+                        {/* <TextInput placeholder="Enter something..." 
                                    value={inputValue} style={styles.textInput} 
-                                   onChangeText={(value) => setInputValue(value)} />
-  
-                        {/** This button is responsible to close the modal */}
-                        <Button title="Close" onPress={toggleModalVisibility} />
+                                   onChangeText={(value) => setInputValue(value)} /> */}
+
+                        <Text style={styles.modalTopicStyle}>Give a Solution</Text>
+
+
+                        <InputField
+                          inputStyle={{
+                          fontSize: 14,
+                          height: 70,
+                          justifyContent: "flex-start",
+                          textAlignVertical: 'top',
+                          }}
+                          containerStyle={{
+                          backgroundColor: '#fff',
+                          marginBottom: 10,
+                          marginTop: 10,
+                          borderRadius: 10 ,
+                          borderColor: 'gray',
+                          borderWidth: 2,
+                          marginHorizontal: 10
+                          }}
+                          placeholder=''
+                          autoCapitalize='none'
+                          autoCorrect={false}
+                          textContentType='none'
+                          value={null}
+                          onChangeText={text => console.log(text)}
+                          multiline={true}
+                      />
+
+                      <Button
+                        onPress={toggleModalVisibility}
+                        backgroundColor='#FF7070'
+                        title='Close'
+                        tileColor='#fff'
+                        titleSize={15}
+                        containerStyle={{
+                        borderRadius: 10,
+                        width: 100,
+                        height: 40,
+                        alignSelf: 'center',
+                        marginBottom: 10,
+                        marginRight: 0
+                        }}
+                      />
                     </View>
                 </View>
         </Modal>
@@ -211,11 +253,19 @@ modalView: {
     left: "50%",
     elevation: 5,
     transform: [{ translateX: -(width * 0.4) }, 
-                { translateY: -90 }],
-    height: 180,
+                { translateY: -100 }],
+    height: 220,
     width: width * 0.8,
     backgroundColor: "#fff",
     borderRadius: 7,
+},
+modalTopicStyle: {
+  alignSelf:'flex-start',
+  marginLeft: 10,
+  marginTop: 10,
+  marginBottom: 10,
+  fontWeight: 'bold',
+  fontSize: 15
 },
 textInput: {
     width: "80%",
