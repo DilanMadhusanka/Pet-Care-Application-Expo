@@ -10,7 +10,14 @@ const Stack = createStackNavigator();
 export default function AuthStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name='ExploreHome' component={ExploreScreen} options={{ headerShown: false }} />
+      <Stack.Screen name='ExploreHome' component={ExploreScreen} options={{ 
+        title: 'Find Solution for Dieseases', 
+        headerTintColor: 'white',
+        headerLeft: null, 
+        headerStyle: {
+            backgroundColor: '#FF7070'
+            }, 
+       }} />
       <Stack.Screen 
         name='AddProblemView' 
         component={AddProblemScreen} 
