@@ -60,54 +60,55 @@ const DATA = [
   },
 ];
 
-const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item.desc} image={item.imageUrl} />
+const renderItem = ({ item }) => <SolutionCardView title={item.title} desc={item.description} image={item.imageUrl} />
 
-const clickHandler = () => {
-  //function to handle click on floating Action Button
-  alert('Floating Button Clicked');
-};
+  const clickHandler = () => {
+    //function to handle click on floating Action Button
+    alert('Floating Button Clicked');
+  };
 
-const SolutionScreen = ({route, navigation}) => {
+  const SolutionScreen = ({route, navigation}) => {
 
-    const [isModalVisible, setModalVisible] = useState(false);
+  const dbRef = Firebase.firestore().collection('solutions');
+
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [solutionDetailsArr, setSolutionDetailsArr] = useState([]);
   
-    // This is to manage TextInput State
-    const [inputValue, setInputValue] = useState("");
+  // This is to manage TextInput State
+  const [inputValue, setInputValue] = useState("");
   
-    // Create toggleModalVisibility function that will
-    // Open and close modal upon button clicks.
-    const toggleModalVisibility = () => {
-        setModalVisible(!isModalVisible);
-    };
+  // Create toggleModalVisibility function that will
+  // Open and close modal upon button clicks.
+  const toggleModalVisibility = () => {
+      setModalVisible(!isModalVisible);
+  };
 
-    const [selectedImage, setSelectedImage] = useState(null);
-    const { title, desc, image } = route.params;
+  const [selectedImage, setSelectedImage] = useState(null);
+  const { title, desc, image } = route.params;
 
-//   const dbRef = Firebase.firestore().collection('problems');
 //   const [problemDetailsArr, setProblemDetailsArr] = useState([]);
-//   const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log(route.params)
-    // const unsubscribe = dbRef.onSnapshot(getCollection);
+    // console.log(route.params)
+    const unsubscribe = dbRef.onSnapshot(getCollection);
   }, []);
 
 
-//   const getCollection = (querySnapshot) => {
-//     const problemsArr = []
-//     querySnapshot.forEach((res) => {
-//       const { title, description, imageUrl } = res.data();
-//       problemsArr.push({
-//         key: res.id,
-//         res,
-//         title,
-//         description,
-//         imageUrl,
-//       });
-//     });
-//     setProblemDetailsArr(problemsArr)
-//     setIsLoading(false)
-//   }
+  const getCollection = (querySnapshot) => {
+    const solutionArr = []
+    querySnapshot.forEach((res) => {
+      const { title, description } = res.data();
+      solutionArr.push({
+        key: res.id,
+        res,
+        title,
+        description,
+      });
+    });
+    setSolutionDetailsArr(solutionArr)
+    setIsLoading(false)
+  }
 
     return (
       <SafeAreaView style={styles.container}>
@@ -117,7 +118,9 @@ const SolutionScreen = ({route, navigation}) => {
             <Image style={styles.discImage} source={{ uri: image}}  />
         </View>
 
-        <FlatList data={DATA} renderItem={renderItem} keyExtractor={item => item.id} style={styles.flatListContainer} />
+        <Text style={styles.solutionTopicTextStyle}>Reasons {'&'} Solutions</Text>
+
+        <FlatList data={solutionDetailsArr} renderItem={renderItem} keyExtractor={item => item.key} style={styles.flatListContainer} />
 
 
         <Modal animationType="slide" 
@@ -222,6 +225,12 @@ textInput: {
     borderColor: "rgba(0, 0, 0, 0.2)",
     borderWidth: 1,
     marginBottom: 8,
+},
+
+solutionTopicTextStyle: {
+  marginTop: 30,
+  marginBottom: 20,
+  fontWeight: 'bold'
 },
 });
   
